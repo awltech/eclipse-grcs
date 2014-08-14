@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <site>
-   <feature url="features/com.worldline.awltech.rcs4e.feature_0.1.0.qualifier.jar" id="com.worldline.awltech.rcs4e.feature" version="0.1.0.qualifier"/>
+   <feature url="features/com.worldline.awltech.rcs4e.feature_0.1.0.qualifier.jar" id="com.worldline.awltech.rcs4e.feature" version="0.1.0.qualifier">
+      <category name="Runnable Callback Service for Eclipse"/>
+   </feature>
+   <category-def name="Runnable Callback Service for Eclipse" label="Runnable Callback Service for Eclipse"/>
 </site>
