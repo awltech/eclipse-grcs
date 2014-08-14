@@ -1,0 +1,12 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Runnable Callback Service Implementation
+Bundle-SymbolicName: com.worldline.awltech.rcs4e.core;singleton:=true
+Bundle-Version: 0.1.0.qualifier
+Bundle-Activator: com.worldline.awltech.rcs4e.core.internal.Activator
+Bundle-Vendor: Worldline.com
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-ActivationPolicy: lazy
+Export-Package: com.worldline.awltech.rcs4e.core

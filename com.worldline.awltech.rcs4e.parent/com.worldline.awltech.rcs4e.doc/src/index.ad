@@ -1,0 +1,90 @@
+= Runnable Callback Service documentation
+
+== What is it ?
+
+The Runnable Callback Service implementation is a lightweight service implementation in Eclipse, to provide a very-low-coupling between an implementation and its caller.
+
+Its behaviour is close to the event-based programming. It propose a lower coupling than the classical process, as you don't even need the callback implementation to be able to call it. Indeed, callbacks are only registered by identifier!
+
+== How is it working ?
+
+=== Invoking a service
+
+This can be done using the *com.worldline.awltech.rcs4e.core.RunnableCallbacksService* singleton. For instance, to run a proxy service, registered behind the *com.acme.myapp.proxyservice* key, you only need to call the following:
+
+----------
+RunnableCallbacksService.INSTANCE.run("com.acme.myapp.proxyservice");
+----------
+
+And that's it !
+
+A next step to this, is to be able to contextualize the execution of the callback. And this is possible by providing parameters to the invocation.
+
+To support that, the service provides methods with the following signatures:
+
+----------
+void run(String identifier, Parameters list)
+void run(String identifier, Set<Parameter> list)
+void run(String identifier, Parameter... list)
+----------
+
+This second parameter acts as a Map wrapper, to ease the writing of parameters. For instance, if we want to propose two parameters to the proxy service, let's say, a location and an array of non proxy hosts, we can have source code as follows:
+
+----------
+// Define the parameter list
+Parameters parameters = Parameters.create().with("location", "Seclin").with("nonProxyHosts", new String[] { "127.0.0.1", "*.priv.atos.fr" });
+
+// Invoke the callback with parameters
+RunnableCallbacksService.INSTANCE.run("com.acme.myapp.proxyservice", parameters);
+----------
+
+Isn't that simple ? Now let's see how to define that on the callback side.
+
+=== Defining a service
+
+A service implementation is, in fact, a simple Runnable, where the callback code to execute is in the run method...
+
+Regarding parameters, the RCS framework comes with a *@Parameterized* annotation, that can be put on fields of the service. Values will be automatically injected by the framework before the execution.
+
+For the proxy service implementation, an exemple of implementation could be like :
+
+----------
+package com.acme.myapp.services;
+
+import com.worldline.awltech.rcs4e.core.Parameterized;
+
+public class ProxyServiceRunnable implements Runnable {
+
+	@Parameterized("location")
+	private String location;
+	
+	@Parameterized("nonProxyHosts")
+	private String[] nonProxyHosts;
+	
+	@Override
+	public void run() {
+		this.doSetProxy();
+		System.out.println("Proxy successfully set !");
+	}
+
+	private void doSetProxy() {
+		// Implement business here...
+	}
+
+}
+----------
+
+The last part is now to register the service... As we are in Eclipse, we rely on the extension point system proposed by the IDE. Here, the extension point is proposed by the framework and is named **. For the initial example, we could have:
+
+----------
+<extension point="com.worldline.awltech.rcs4e.core.RunnableCallbacks">
+	<callback identifier="com.acme.myapp.proxyservice" implementation="com.acme.myapp.services.ProxyServiceRunnable">
+	</callback>
+</extension>
+----------
+
+
+=== Facts about the internal behaviour...
+
+* Callbacks are executed in threads, using a 5-threads-fixed executor services.
+* Several callbacks can be registered with the same key! In this case, all implementations will be run in parallel !
