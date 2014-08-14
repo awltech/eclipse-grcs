@@ -74,7 +74,7 @@ public class ProxyServiceRunnable implements Runnable {
 }
 ----------
 
-The last part is now to register the service... As we are in Eclipse, we rely on the extension point system proposed by the IDE. Here, the extension point is proposed by the framework and is named **. For the initial example, we could have:
+The last part is now to register the service... As we are in Eclipse, we rely on the extension point system proposed by the IDE. Here, the extension point is proposed by the framework and is named *com.worldline.awltech.rcs4e.core.RunnableCallbacks*. For the initial example, we could have:
 
 ----------
 <extension point="com.worldline.awltech.rcs4e.core.RunnableCallbacks">
