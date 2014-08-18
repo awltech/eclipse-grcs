@@ -36,12 +36,15 @@ public final class ParametersInjector {
 		Class<?> clazz = implementation.getClass();
 		Map<String, Field> fields = new HashMap<String, Field>();
 
-		for (Field field : clazz.getDeclaredFields()) {
-			if (field.getAnnotation(Parameterized.class) != null) {
-				Parameterized annotation = field.getAnnotation(Parameterized.class);
-				String value = annotation.value();
-				fields.put(value, field);
+		while (clazz != null && clazz != Object.class) {
+			for (Field field : clazz.getDeclaredFields()) {
+				if (field.getAnnotation(Parameterized.class) != null) {
+					Parameterized annotation = field.getAnnotation(Parameterized.class);
+					String value = annotation.value();
+					fields.put(value, field);
+				}
 			}
+			clazz = clazz.getSuperclass();
 		}
 
 		for (Parameter parameter : parameterList) {
@@ -58,9 +61,8 @@ public final class ParametersInjector {
 						Activator
 								.getDefault()
 								.getLog()
-								.log(new Status(IStatus.WARNING, Activator.PLUGIN_ID,
-										"Failed to inject information in field " + clazz.getName() + "."
-												+ field.getName(), e));
+								.log(new Status(IStatus.WARNING, Activator.PLUGIN_ID, "Failed to inject information in field "
+										+ clazz.getName() + "." + field.getName(), e));
 					}
 					field.setAccessible(accessible);
 				}

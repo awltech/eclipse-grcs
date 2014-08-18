@@ -1,0 +1,13 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Preimplemented tools for RCS4E
+Bundle-SymbolicName: com.worldline.awltech.rcs4e.tools
+Bundle-Version: 0.1.0.qualifier
+Bundle-Activator: com.worldline.awltech.rcs4e.tools.internal.Activator
+Bundle-Vendor: Worldline.com
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ com.worldline.awltech.rcs4e.core
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-ActivationPolicy: lazy
+Export-Package: com.worldline.awltech.rcs4e.tools.conditional

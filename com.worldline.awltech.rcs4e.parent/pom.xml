@@ -113,5 +113,6 @@
 		<module>com.worldline.awltech.rcs4e.feature</module>
 		<module>com.worldline.awltech.rcs4e.repository</module>
 		<module>com.worldline.awltech.rcs4e.doc</module>
+		<module>com.worldline.awltech.rcs4e.tools</module>
 	</modules>
 </project>
