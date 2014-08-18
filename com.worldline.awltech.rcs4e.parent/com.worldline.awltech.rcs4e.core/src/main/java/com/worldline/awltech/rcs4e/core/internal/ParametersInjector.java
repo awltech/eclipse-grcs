@@ -3,6 +3,7 @@ package com.worldline.awltech.rcs4e.core.internal;
 import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -34,24 +35,30 @@ public final class ParametersInjector {
 		}
 
 		Class<?> clazz = implementation.getClass();
-		Map<String, Field> fields = new HashMap<String, Field>();
+		Map<Field, String> fields = new HashMap<Field, String>();
 
 		while (clazz != null && clazz != Object.class) {
 			for (Field field : clazz.getDeclaredFields()) {
 				if (field.getAnnotation(Parameterized.class) != null) {
 					Parameterized annotation = field.getAnnotation(Parameterized.class);
 					String value = annotation.value();
-					fields.put(value, field);
+					fields.put(field, value);
 				}
 			}
 			clazz = clazz.getSuperclass();
 		}
 
-		for (Parameter parameter : parameterList) {
-			Field field = fields.get(parameter.getKey());
-			if (field != null) {
+		Map<String, Object> parametersMap = new HashMap<String, Object>();
 
-				Object value = parameter.getValue();
+		for (Parameter parameter : parameterList) {
+			parametersMap.put(parameter.getKey(), parameter.getValue());
+		}
+
+		for (Entry<Field, String> fieldEntry : fields.entrySet()) {
+
+			Field field = fieldEntry.getKey();
+			if (field != null) {
+				Object value = parametersMap.get(fieldEntry.getValue());
 				if (value != null && value.getClass().isAssignableFrom(field.getType())) {
 					boolean accessible = field.isAccessible();
 					field.setAccessible(true);
